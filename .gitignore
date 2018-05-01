@@ -8,3 +8,7 @@
 /build
 /captures
 .externalNativeBuild
+libs/
+.idea/vcs.xml
+blinkingloader/libs/
+sample/libs/

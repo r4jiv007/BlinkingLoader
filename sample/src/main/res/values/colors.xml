@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="colorPrimary">#3F51B5</color>
+  <color name="colorPrimaryDark">#303F9F</color>
+  <color name="colorAccent">#FF4081</color>
+  <color name="colorAccent_light">#33FF4081</color>
+
+  <color name="Barney">#c724b1</color>
+  <color name="light_Barney">#33e54ad9</color>
+  <color name="Orange">#ffb800</color>
+  <color name="light_Orange">#33ffb800</color>
+  <color name="TomatoRed">#f44242</color>
+  <color name="light_TomatoRed">#33f44242</color>
+  <color name="AppleGreen">#78be20</color>
+  <color name="light_AppleGreen">#3378be20</color>
+
+</resources>

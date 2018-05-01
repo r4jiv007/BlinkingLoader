@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <color name="blinkingColor">#00a9ce</color>
+  <color name="neutralColor">#3300a9ce</color>
+</resources>

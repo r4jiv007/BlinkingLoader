@@ -14,7 +14,7 @@ public class BlinkingView extends View {
 
   private static final float DEFAULT_STROKE_WIDTH = 3.0f;
 
-  private static final int DEFAULT_RADIUS = 20;
+  private static final int DEFAULT_RADIUS = 50;
 
   private static final int DEFAULT_COLOR = Color.parseColor("#00a9ce");
 

@@ -7,7 +7,6 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -26,32 +25,24 @@ import java.util.List;
 
 public class BlinkingLoader extends LinearLayout {
 
-  private final static int DEFAULT_INDICATOR_WIDTH = 10;
+  private final static int DEFAULT_INDICATOR_MARGIN = 10;
   private final static int DEFAULT_NUM_DOTS = 3;
-  private static final long DURATION_DIFF = 500L;
+  private static final long DURATION_DIFF = 350L;
   private static final int DEFAULT_NEUTRAL_COLOR = Color.parseColor("#3300a9ce");
   private static final int DEFAULT_BLINKING_COLOR = Color.parseColor("#00a9ce");
   private static final int DEFAULT_DOT_RADIUS = 20;
   protected int blinkingColor = DEFAULT_BLINKING_COLOR;
   protected int neutralColor = DEFAULT_NEUTRAL_COLOR;
   protected int dotRadius = DEFAULT_DOT_RADIUS;
-  int percentHeight = DEFAULT_INDICATOR_WIDTH;
   int oldPos = -1;
   int pos;
   boolean stop;
-  ValueAnimator blink = new ValueAnimator();
-  ValueAnimator normal = new ValueAnimator();
   BlinkingView[] blinkingViews;
-  private int mIndicatorMargin = -1;
-  private int mIndicatorWidth = -1;
-  private int mIndicatorHeight = -1;
+  private int mIndicatorVerticalMargin = -1;
+  private int mIndicatorHorizontalMargin = -1;
   private int mNumDots = DEFAULT_NUM_DOTS;
   private int mAnimatorResId = R.animator.du_dot_animator;
   private int mAnimatorReverseResId = 0;
-  private Animator mAnimatorScaleUp;
-  private Animator mAnimatorIn;
-  private Animator mImmediateAnimatorOut;
-  private Animator mImmediateAnimatorIn;
   private AnimatorSet animatorSetscaleUp;
   private AnimatorSet animatorSetscaleDown;
   private int mLastPosition = -1;
@@ -126,12 +117,12 @@ public class BlinkingLoader extends LinearLayout {
     }
 
     TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BlinkingLoader);
-    mIndicatorWidth =
-        typedArray.getDimensionPixelSize(R.styleable.BlinkingLoader_dot_width, percentHeight);
-    mIndicatorHeight =
-        typedArray.getDimensionPixelSize(R.styleable.BlinkingLoader_dot_height, percentHeight);
-    mIndicatorMargin =
-        typedArray.getDimensionPixelSize(R.styleable.BlinkingLoader_dot_margin, percentHeight);
+    mIndicatorHorizontalMargin =
+        typedArray
+            .getDimensionPixelSize(R.styleable.BlinkingLoader_dot_margin, DEFAULT_INDICATOR_MARGIN);
+
+    mIndicatorVerticalMargin = (int) (Math.floor(1.8f * DEFAULT_DOT_RADIUS) - DEFAULT_DOT_RADIUS);
+
     mNumDots = typedArray.getInt(R.styleable.BlinkingLoader_dot_num_dots, DEFAULT_NUM_DOTS);
     mAnimatorResId = typedArray.getResourceId(R.styleable.BlinkingLoader_dot_animator,
         R.animator.du_dot_animator);
@@ -166,10 +157,7 @@ public class BlinkingLoader extends LinearLayout {
 
   public void configureIndicator(int indicatorWidth, int indicatorHeight, int indicatorMargin,
       @AnimatorRes int animatorId, @AnimatorRes int animatorReverseId) {
-
-    mIndicatorWidth = indicatorWidth;
-    mIndicatorHeight = indicatorHeight;
-    mIndicatorMargin = indicatorMargin;
+    mIndicatorVerticalMargin = indicatorMargin;
 
     mAnimatorResId = animatorId;
     mAnimatorReverseResId = animatorReverseId;
@@ -178,40 +166,9 @@ public class BlinkingLoader extends LinearLayout {
   }
 
   private void checkIndicatorConfig(Context context) {
-    mIndicatorWidth = (mIndicatorWidth < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorWidth;
-    mIndicatorHeight =
-        (mIndicatorHeight < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorHeight;
-    mIndicatorMargin =
-        (mIndicatorMargin < 0) ? dip2px(DEFAULT_INDICATOR_WIDTH) : mIndicatorMargin;
-
     mAnimatorResId = (mAnimatorResId == 0) ? R.animator.du_dot_animator : mAnimatorResId;
-
-    mAnimatorScaleUp = createAnimatorScaleUp(context);
-    mImmediateAnimatorOut = createAnimatorScaleUp(context);
-    mImmediateAnimatorOut.setDuration(0);
-
-    mAnimatorIn = createAnimatorScaleDown(context);
-    mImmediateAnimatorIn = createAnimatorScaleDown(context);
-    mImmediateAnimatorIn.setDuration(0);
-
     animatorSetscaleDown = createAnimatorSetScaleDown(context);
     animatorSetscaleUp = createAnimatorSetScaleUp(context);
-
-  }
-
-  private Animator createAnimatorScaleUp(Context context) {
-    return AnimatorInflater.loadAnimator(context, mAnimatorResId);
-  }
-
-  private Animator createAnimatorScaleDown(Context context) {
-    Animator animatorIn;
-    if (mAnimatorReverseResId == 0) {
-      animatorIn = AnimatorInflater.loadAnimator(context, mAnimatorResId);
-      animatorIn.setInterpolator(new ReverseInterpolator());
-    } else {
-      animatorIn = AnimatorInflater.loadAnimator(context, mAnimatorReverseResId);
-    }
-    return animatorIn;
   }
 
   private AnimatorSet createAnimatorSetScaleUp(Context context) {
@@ -271,10 +228,16 @@ public class BlinkingLoader extends LinearLayout {
     addView(Indicator, WRAP_CONTENT, WRAP_CONTENT);
     LayoutParams lp = (LayoutParams) Indicator.getLayoutParams();
 
-    lp.leftMargin = mIndicatorMargin;
-    lp.rightMargin = mIndicatorMargin;
-    lp.topMargin = mIndicatorMargin;
-    lp.bottomMargin = mIndicatorMargin;
+    lp.rightMargin = mIndicatorHorizontalMargin;
+    lp.leftMargin = mIndicatorHorizontalMargin;
+    lp.topMargin = mIndicatorVerticalMargin;
+    lp.bottomMargin = mIndicatorVerticalMargin;
+    if (pos == 0) {
+      lp.leftMargin = mIndicatorVerticalMargin;
+    }
+    if (pos == mNumDots - 1) {
+      lp.rightMargin = mIndicatorVerticalMargin;
+    }
     Indicator.setLayoutParams(lp);
   }
 

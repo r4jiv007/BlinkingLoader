@@ -14,3 +14,4 @@ animated blinking loader
       app:dot_num_dots="5"/>
 ```
       
+![ScreenShot](r4jiv007.github.com/BlinkingLoader/screenshot/screenshot.gif)

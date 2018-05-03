@@ -13,4 +13,5 @@ animated blinking loader
       app:dot_neutralColor="@color/colorAccent_light"
       app:dot_num_dots="5"/>
 ```
-      
+
+![ScreenShot](/screenshot/screenshot.gif)

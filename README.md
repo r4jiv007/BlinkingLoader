@@ -14,4 +14,3 @@ animated blinking loader
       app:dot_num_dots="5"/>
 ```
       
-![ScreenShot](/screenshot/screenshot.gif)

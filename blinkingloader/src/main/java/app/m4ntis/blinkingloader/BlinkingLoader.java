@@ -241,8 +241,10 @@ public class BlinkingLoader extends LinearLayout {
     Indicator.setLayoutParams(lp);
   }
 
+  final Handler handler = new Handler();
   public void startBlinking() {
-    final Handler handler = new Handler();
+    handler.removeCallbacksAndMessages(null);
+    stop = false;
     handler.post(new Runnable() {
       @Override
       public void run() {
@@ -257,11 +259,17 @@ public class BlinkingLoader extends LinearLayout {
         }
         if (!stop) {
           handler.postDelayed(this, DURATION_DIFF);
+        }else{
+          handler.removeCallbacksAndMessages(null);
         }
       }
     });
   }
 
+  public void stopBlinking(){
+    stop=true;
+    handler.removeCallbacksAndMessages(null);
+  }
   public int dip2px(float dpValue) {
     final float scale = getResources().getDisplayMetrics().density;
     return (int) (dpValue * scale + 0.5f);
